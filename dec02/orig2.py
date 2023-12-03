@@ -16,7 +16,6 @@ def main():
     total = 0
     for game_id, game in enumerate(games, 1):
         limits = {"red": 1, "green": 1, "blue": 1}
-        print(game)
         for subgame in game.split("; "):
             for chunk in subgame.split(","):
                 num, color = chunk.split()

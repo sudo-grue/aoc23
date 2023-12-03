@@ -25,8 +25,6 @@ def main():
         if limits["red"] <= 12 and limits["green"] <= 13 and limits["blue"] <= 14:
             print(f"\tSUCCESS: {limits}")
             total += game_id
-        else:
-            print(f"\tFAILURE: {limits}")
 
     print(total)
 
