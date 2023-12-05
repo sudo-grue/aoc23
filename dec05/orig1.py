@@ -1,5 +1,16 @@
 #!/usr/bin/env python3
 
+class Converter:
+    def __init__(self, dst, src, steps):
+        self.dst = dst
+        self.src = src
+        self.steps = steps
+
+    def convert(self, in_val):
+        if self.src <= in_val < self.src + self.steps:
+            return in_val + (self.dst - self.src)
+        raise ValueError
+
 def main():
     data = []
     with open("input.txt", "r") as f:
@@ -9,127 +20,105 @@ def main():
     _, seeds = data[idx].split(": ")
     seeds = list(map(int, seeds.split()))
     idx += 3
-    print(seeds)
 
     seed_to_soil = []
     while data[idx] != "":
-        seed_to_soil.append(list(map(int, data[idx].split())))
+        seed_to_soil.append(Converter(*map(int, data[idx].split())))
         idx += 1
     idx += 2
-
-    for i, entry in enumerate(seed_to_soil):
-        src_map = list(range(entry[1], entry[1] + entry[2]))
-        dst_map = list(range(entry[0], entry[0] + entry[2]))
-        seed_to_soil[i] = [src_map, dst_map]
 
     soil_to_fert = []
     while data[idx] != "":
-        soil_to_fert.append(list(map(int, data[idx].split())))
+        soil_to_fert.append(Converter(*map(int, data[idx].split())))
         idx += 1
     idx += 2
-
-    for i, entry in enumerate(soil_to_fert):
-        src_map = list(range(entry[1], entry[1] + entry[2]))
-        dst_map = list(range(entry[0], entry[0] + entry[2]))
-        soil_to_fert[i] = [src_map, dst_map]
 
     fert_to_water = []
     while data[idx] != "":
-        fert_to_water.append(list(map(int, data[idx].split())))
+        fert_to_water.append(Converter(*map(int, data[idx].split())))
         idx += 1
     idx += 2
-
-    for i, entry in enumerate(fert_to_water):
-        src_map = list(range(entry[1], entry[1] + entry[2]))
-        dst_map = list(range(entry[0], entry[0] + entry[2]))
-        fert_to_water[i] = [src_map, dst_map]
 
     water_to_light = []
     while data[idx] != "":
-        water_to_light.append(list(map(int, data[idx].split())))
+        water_to_light.append(Converter(*map(int, data[idx].split())))
         idx += 1
     idx += 2
-
-    for i, entry in enumerate(water_to_light):
-        src_map = list(range(entry[1], entry[1] + entry[2]))
-        dst_map = list(range(entry[0], entry[0] + entry[2]))
-        water_to_light[i] = [src_map, dst_map]
 
     light_to_temp = []
     while data[idx] != "":
-        light_to_temp.append(list(map(int, data[idx].split())))
+        light_to_temp.append(Converter(*map(int, data[idx].split())))
         idx += 1
     idx += 2
-
-    for i, entry in enumerate(light_to_temp):
-        src_map = list(range(entry[1], entry[1] + entry[2]))
-        dst_map = list(range(entry[0], entry[0] + entry[2]))
-        light_to_temp[i] = [src_map, dst_map]
 
     temp_to_humid = []
     while data[idx] != "":
-        temp_to_humid.append(list(map(int, data[idx].split())))
+        temp_to_humid.append(Converter(*map(int, data[idx].split())))
         idx += 1
     idx += 2
 
-    for i, entry in enumerate(temp_to_humid):
-        src_map = list(range(entry[1], entry[1] + entry[2]))
-        dst_map = list(range(entry[0], entry[0] + entry[2]))
-        temp_to_humid[i] = [src_map, dst_map]
-
     humid_to_loc = []
     for line in data[idx:]:
-        humid_to_loc.append(list(map(int, line.split())))
-    print(humid_to_loc)
+        humid_to_loc.append(Converter(*map(int, line.split())))
 
-    for i, entry in enumerate(humid_to_loc):
-        src_map = list(range(entry[1], entry[1] + entry[2]))
-        dst_map = list(range(entry[0], entry[0] + entry[2]))
-        humid_to_loc[i] = [src_map, dst_map]
-
-    print(humid_to_loc)
 
     locs = []
     for curr in seeds:
-        for seed, soil in seed_to_soil:
-            if curr in seed:
-                curr = soil[seed.index(curr)]
+        for machine in seed_to_soil:
+            try:
+                curr = machine.convert(curr)
                 break
+            except ValueError:
+                pass
 
-        for soil, fert in soil_to_fert:
-            if curr in soil:
-                curr = fert[soil.index(curr)]
+        for machine in soil_to_fert:
+            try:
+                curr = machine.convert(curr)
                 break
+            except ValueError:
+                pass
 
-        for fert, water in fert_to_water:
-            if curr in fert:
-                curr = water[fert.index(curr)]
+        for machine in fert_to_water:
+            try:
+                curr = machine.convert(curr)
                 break
+            except ValueError:
+                pass
 
-        for water, light in water_to_light:
-            if curr in water:
-                curr = light[water.index(curr)]
+        for machine in water_to_light:
+            try:
+                curr = machine.convert(curr)
                 break
+            except ValueError:
+                pass
 
-        for light, temp in light_to_temp:
-            if curr in light:
-                curr = temp[light.index(curr)]
+        for machine in light_to_temp:
+            try:
+                curr = machine.convert(curr)
                 break
+            except ValueError:
+                pass
 
-        for temp, humid in temp_to_humid:
-            if curr in temp:
-                curr = humid[temp.index(curr)]
+        for machine in temp_to_humid:
+            try:
+                curr = machine.convert(curr)
                 break
+            except ValueError:
+                pass
 
-        for humid, loc in humid_to_loc:
-            if curr in humid:
-                curr = loc[humid.index(curr)]
+        for machine in humid_to_loc:
+            try:
+                curr = machine.convert(curr)
                 break
+            except ValueError:
+                pass
 
         locs.append(curr)
 
     print(seeds)
     print(locs)
+
+    print(min(locs))
 
 if __name__ == '__main__':
     main()
